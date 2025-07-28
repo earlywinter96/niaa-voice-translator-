@@ -10,9 +10,9 @@ translator = Translator()
 
 # Fallback voice list if fetching from API fails
 FALLBACK_VOICES = [
-    {"id": "en-IN-amala", "name": "Amala (Indian Female)"},
+    {"id": "hi-IN-ayushi", "name": "Ayushi (Indian Female)"},
     {"id": "en-US-natalie", "name": "Natalie (US Female)"},
-    {"id": "en-GB-harry", "name": "Harry (UK Male)"}
+    {"id": "en-UK-ruby", "name": "Ruby (UK Female)"}
 ]
 
 @app.route("/")
@@ -73,5 +73,5 @@ def images(filename):
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Get Render-assigned port
+    port = int(os.environ.get("PORT", 5001))  # Get Render-assigned port
     app.run(host="0.0.0.0", port=port)        # Bind to 0.0.0.0
