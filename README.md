@@ -100,10 +100,6 @@ MIT License. See LICENSE file for details.
 
 Built with ❤️ by EarlyWinter96
 
-yaml
-Copy
-Edit
-
 ---
 
 Would you like me to include:
