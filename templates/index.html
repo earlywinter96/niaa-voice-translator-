@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nia – Futuristic AI Voice Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="icon" type="image/png" href="/images/robot-girl.png">
+  
+</head>
+<body>
+  <div class="container">
+    
+    <div class="robot-frame">
+      <img src="/images/robot-girl.png" alt="Nia AI" width="140" height="140">
+    </div>
+
+    <h1>Nia – Voice Translator</h1>
+
+    <label for="voice">Choose Voice:</label>
+    <select id="voice">
+      {% for voice in voices %}
+        <option value="{{ voice.id }}" {% if loop.first %}selected{% endif %}>
+          {{ voice.name }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <label for="language">Input Language:</label>
+    <select id="language">
+      <option value="en">English</option>
+      <option value="hi">Hindi</option>
+      <option value="es">Spanish</option>
+      <option value="fr">French</option>
+      <option value="de">German</option>
+    </select>
+
+    <br><br>
+    <button onclick="startListening()">🎤 Say Something</button>
+
+    <div class="status-bar">
+      <p><strong>Status:</strong> <span id="status">Idle</span></p>
+    </div>
+
+    <textarea id="spoken" rows="2" readonly placeholder="You said..."></textarea>
+    <textarea id="translated" rows="2" readonly placeholder="Translated..."></textarea>
+
+    <audio id="audio" controls style="display:none;"></audio>
+
+  </div>
+
+  <script>
+    const statusEl = document.getElementById("status");
+    const spokenEl = document.getElementById("spoken");
+    const translatedEl = document.getElementById("translated");
+    const audioEl = document.getElementById("audio");
+    const voiceSelect = document.getElementById("voice");
+    const langSelect = document.getElementById("language");
+
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+
+    function startListening() {
+      recognition.lang = langSelect.value + '-IN';
+      recognition.start();
+      statusEl.textContent = "🎧 Listening...";
+    }
+
+    recognition.onresult = async function (event) {
+      const text = event.results[0][0].transcript.trim();
+      spokenEl.value = text;
+      statusEl.textContent = "🔄 Translating & Speaking...";
+
+      const response = await fetch("/speak", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text,
+          voice: voiceSelect.value,
+          language: langSelect.value
+        })
+      });
+
+      const data = await response.json();
+      if (data.audio) {
+        translatedEl.value = data.translated || "";
+        audioEl.src = data.audio;
+        audioEl.style.display = "block";
+        audioEl.play();
+        statusEl.textContent = "✅ Response spoken.";
+      } else {
+        statusEl.textContent = "❌ Error: " + (data.error || "Unknown");
+      }
+    };
+
+    recognition.onerror = function (e) {
+      statusEl.textContent = "❌ Mic error: " + e.error;
+    };
+  </script>
+</body>
+</html>
