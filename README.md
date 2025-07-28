@@ -19,7 +19,7 @@ _Your personal multilingual voice assistant — powered by AI, voice recognition
 
 ## 🚀 Live Demo
 
-> 🔗 Coming Soon (Vercel/Render deployment planned)
+> 🔗 [Click Here ](https://niaa-voice-translator.onrender.com/)
 
 ---
 
