@@ -71,5 +71,7 @@ def speak():
 def images(filename):
     return send_from_directory('images', filename)
 
+
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    port = int(os.environ.get("PORT", 5000))  # Get Render-assigned port
+    app.run(host="0.0.0.0", port=port)        # Bind to 0.0.0.0
